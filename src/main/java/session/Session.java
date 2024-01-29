@@ -26,6 +26,13 @@ public class Session {
         return sessionId;
     }
 
+    public static String getLoginUserId(UUID sessionId) {
+        UserSession userSession = loginUsers.get(sessionId);
+        if (userSession == null) {
+            throw new BadRequestException("이미 로그아웃한 유저입니다.");
+        }
+        return userSession.getUserId();
+    }
     public static boolean loginCheck(UUID sessionId) {
         return loginUsers.containsKey(sessionId);
     }
@@ -40,7 +47,9 @@ public class Session {
         public UserSession(String userId) {
             this.userId = userId;
         }
-
+        public String getUserId() {
+            return this.userId;
+        }
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
