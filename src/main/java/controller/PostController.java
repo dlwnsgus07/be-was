@@ -6,6 +6,7 @@ import annotation.RequestMapping;
 import config.AppConfig;
 import dto.HttpResponseDto;
 import dto.PostDto;
+import model.http.Status;
 import model.http.request.HttpRequest;
 import service.PostService;
 import session.Session;
@@ -37,5 +38,11 @@ public class PostController {
         String loginUserId = Session.getLoginUserId(UUID.fromString(sessionId));
         PostDto postDto = PostDto.fromBody(httpRequest.getBody().getContent(), loginUserId);
         postService.create(postDto);
+        redirectToPath(httpResponseDto, "/index.html");
+    }
+
+    private void redirectToPath(HttpResponseDto httpResponseDto, String path) {
+        httpResponseDto.setStatus(Status.REDIRECT);
+        httpResponseDto.addHeader("Location", path);
     }
 }
