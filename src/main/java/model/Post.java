@@ -22,6 +22,22 @@ public class Post {
         return new Post(postDto.getTime(), postDto.getTitle(), postDto.getAuthor(), postDto.getContent());
     }
 
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
