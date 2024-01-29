@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Set;
 
+import static config.AppConfig.postController;
 import static config.AppConfig.userController;
 
 public class UrlControllerMapper {
@@ -22,6 +23,7 @@ public class UrlControllerMapper {
     }
     public UrlControllerMapper() {
         registerController(userController());
+        registerController(postController());
     }
     public void registerController(Object controller) {
         Class<?> controllerClass = controller.getClass();

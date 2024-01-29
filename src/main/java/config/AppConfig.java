@@ -1,5 +1,6 @@
 package config;
 
+import controller.PostController;
 import filter.AuthFilter;
 import filter.Filter;
 import controller.UserControllerImpl;
@@ -8,10 +9,7 @@ import factory.HttpRequestFactoryImpl;
 import factory.HttpResponseFactory;
 import factory.HttpResponseFactoryImpl;
 import handler.*;
-import service.HttpResponseSendService;
-import service.HttpResponseSendServiceImpl;
-import service.UserService;
-import service.UserServiceImpl;
+import service.*;
 import util.FileDetector;
 import util.UrlControllerMapper;
 
@@ -54,5 +52,13 @@ public class AppConfig {
 
     public static UrlControllerMapper urlControllerMapper(){
         return UrlControllerMapper.getInstance();
+    }
+
+    public static PostController postController() {
+        return PostController.getInstance();
+    }
+
+    public static PostService postService() {
+        return PostService.getInstance();
     }
 }
