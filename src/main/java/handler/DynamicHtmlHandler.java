@@ -3,13 +3,17 @@ package handler;
 import config.AppConfig;
 import db.Database;
 import dto.HttpResponseDto;
+import exception.BadRequestException;
 import model.Post;
+import model.http.ContentType;
 import model.http.request.HttpRequest;
 import util.FileDetector;
 import util.HtmlParser;
 
-import java.io.File;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DynamicHtmlHandler{
     private static class DynamicHtmlHandlerHolder {
@@ -27,10 +31,48 @@ public class DynamicHtmlHandler{
     }
 
     public void handle(HttpRequest httpRequest, HttpResponseDto httpResponseDto, boolean isLogin) {
-        handleAllRequest(httpRequest, httpResponseDto, isLogin);
-        handleMainPageRequest(httpRequest, httpResponseDto);
+        String pathUrl = httpRequest.getStartLine().getPathUrl();
+        if(pathUrl.endsWith("index.html")){
+            handleMainPageRequest(httpRequest, httpResponseDto);
+        }
+        if(pathUrl.startsWith("/post/show")){
+            handlePostShowRequest(httpRequest, httpResponseDto);
+        }
+        if(pathUrl.endsWith(".html")){
+            handleAllRequest(httpRequest, httpResponseDto, isLogin);
+        }
+    }
+    public void handlePostShowRequest(HttpRequest httpRequest, HttpResponseDto httpResponseDto) {
+        HtmlParser htmlParser;
+        if (httpResponseDto.getContent() == null) {
+            htmlParser = new HtmlParser(new String(fileDetector.getFile("/post/show.html")));
+        } else {
+            htmlParser = new HtmlParser(httpResponseDto.getContent());
+        }
+        String pathUrl = httpRequest.getStartLine().getPathUrl();
+        String id = parseIdFromUrl(pathUrl);
+        Optional<Post> postById = Database.findPostById(Integer.parseInt(id));
+
+        if(postById.isPresent()){
+            Post post = postById.get();
+            htmlParser.appendContentByClass("post-title", post.getTitle());
+            htmlParser.appendContentByClass("article-author-name", post.getAuthor());
+            htmlParser.appendContentByClass("article-header-time", post.getCreateTime().toLocalDate().toString());
+            htmlParser.appendContentByClass("article-doc", post.getContent());
+        }else{
+            throw new BadRequestException("잘못된 ID를 입력하였습니다.");
+        }
+        httpResponseDto.setContentType(ContentType.HTML);
+        httpResponseDto.setContent(htmlParser.getHtml());
+        httpResponseDto.setContentLength(htmlParser.getHtml().getBytes().length);
     }
 
+    private String parseIdFromUrl(String url) {
+        Pattern pattern = Pattern.compile("\\?id=(\\d+)");
+        Matcher matcher = pattern.matcher(url);
+
+        return matcher.find() ? matcher.group(1) : null;
+    }
     private void handleMainPageRequest(HttpRequest httpRequest, HttpResponseDto httpResponseDto) {
         HtmlParser htmlParser;
         if (httpResponseDto.getContent() == null) {
@@ -45,7 +87,7 @@ public class DynamicHtmlHandler{
                     .append("<div class=\"wrap\">")
                     .append("<div class=\"main\">")
                     .append("<strong class=\"subject\">")
-                    .append("<a href=\"./qna/show.html\">").append(post.getTitle())
+                    .append("<a href=\"./post/show?id=").append(post.getId()).append("\">").append(post.getTitle())
                     .append("</a>")
                     .append("</strong>")
                     .append("<div class=\"auth-info\">")
@@ -57,24 +99,6 @@ public class DynamicHtmlHandler{
                     .append("</div>")
                     .append("</li>");
         }
-//        <li>
-//                  <div class="wrap">
-//                      <div class="main">
-//                          <strong class="subject">
-//                              <a href="./qna/show.html">runtime 에 reflect 발동 주체 객체가 뭔지 알 방법이 있을까요?</a>
-//                          </strong>
-//                          <div class="auth-info">
-//                              <i class="icon-add-comment"></i>
-//                              <span class="time">2016-01-05 18:47</span>
-//                              <a href="./user/profile.html" class="author">김문수</a>
-//                          </div>
-//                          <div class="reply" title="댓글">
-//                              <i class="icon-reply"></i>
-//                              <span class="point">12</span>
-//                          </div>
-//                      </div>
-//                  </div>
-//              </li>
         htmlParser.appendContentById("posts", stringBuilder.toString());
         httpResponseDto.setContentType(fileDetector.getContentType(httpRequest.getHeaders().getAccept(), httpRequest.getStartLine().getPathUrl()));
         httpResponseDto.setContent(htmlParser.getHtml());
@@ -85,7 +109,7 @@ public class DynamicHtmlHandler{
     private void handleAllRequest(HttpRequest httpRequest, HttpResponseDto httpResponseDto, boolean isLogin) {
         HtmlParser htmlParser;
         if (httpResponseDto.getContent() == null) {
-            htmlParser = new HtmlParser(new String(fileDetector.getFile(httpRequest.getStartLine().getPathUrl())));
+            htmlParser = new HtmlParser(new String(fileDetector.getFile("/post.show.html")));
         } else {
             htmlParser = new HtmlParser(httpResponseDto.getContent());
         }

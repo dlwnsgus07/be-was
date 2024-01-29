@@ -5,6 +5,7 @@ import dto.PostDto;
 import java.time.LocalDateTime;
 
 public class Post {
+    private Integer id;
     private final LocalDateTime createTime;
     private final String title;
     private final String author;
@@ -36,6 +37,14 @@ public class Post {
 
     public String getContent() {
         return content;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     @Override

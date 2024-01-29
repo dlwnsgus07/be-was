@@ -1,17 +1,25 @@
 package controller;
 
 import annotation.Controller;
+import annotation.GetMapping;
 import annotation.PostMapping;
 import annotation.RequestMapping;
 import config.AppConfig;
+import db.Database;
 import dto.HttpResponseDto;
 import dto.PostDto;
+import exception.BadRequestException;
+import model.Post;
 import model.http.Status;
 import model.http.request.HttpRequest;
 import service.PostService;
 import session.Session;
+import util.HtmlParser;
 
+import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static config.AppConfig.*;
 

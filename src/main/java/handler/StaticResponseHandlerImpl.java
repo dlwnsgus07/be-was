@@ -39,6 +39,9 @@ public class StaticResponseHandlerImpl implements StaticResponseHandler {
         }
     }
     private void handleStaticFileRequest(HttpRequest httpRequest, HttpResponseDto httpResponseDto) {
+        if(httpRequest.getStartLine().getPathUrl().contains("post/show")){
+            return;
+        }
         byte[] file = fileDetector.getFile(httpRequest.getStartLine().getPathUrl());
         if(httpRequest.getStartLine().getPathUrl().contains("html")
                 || httpRequest.getStartLine().getPathUrl().contains("css")

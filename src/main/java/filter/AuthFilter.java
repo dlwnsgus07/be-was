@@ -21,7 +21,7 @@ public class AuthFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(AuthFilter.class);
     private final StaticResponseHandler staticResponseHandler;
     private final DynamicResponseHandler dynamicResponseHandler;
-    private static List<String> loginRequiredPath = List.of("/user/list", "/post/write");
+    private static List<String> loginRequiredPath = List.of("/user/list", "/post/write", "/post/show");
     private final Set<String> dynamicUrl;
     private final DynamicHtmlHandler dynamicHtmlHandler;
 
@@ -64,9 +64,7 @@ public class AuthFilter implements Filter {
             logger.debug("정적인 response 전달");
             staticResponseHandler.handle(httpRequest, httpResponseDto);
         }
-        if (httpRequest.getStartLine().getPathUrl().endsWith(".html")) {
-            dynamicHtmlHandler.handle(httpRequest, httpResponseDto, isLogin);
-        }
+        dynamicHtmlHandler.handle(httpRequest, httpResponseDto, isLogin);
     }
 
     private boolean checkLogin(HttpRequest httpRequest) {

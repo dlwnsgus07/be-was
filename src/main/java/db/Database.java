@@ -21,7 +21,12 @@ public class Database {
     }
 
     public static void addPost(Post post) {
-        posts.put(++cnt, post);
+        post.setId(++cnt);
+        posts.put(post.getId(), post);
+    }
+
+    public static Optional<Post> findPostById(Integer postId) {
+        return Optional.ofNullable(posts.get(postId));
     }
     public static Optional<User> findUserById(String userId) {
         return Optional.ofNullable(users.get(userId));
