@@ -61,4 +61,7 @@ public class AppConfig {
     public static PostService postService() {
         return PostService.getInstance();
     }
+    public static DynamicHtmlHandler dynamicHtmlHandler(){
+        return DynamicHtmlHandler.getInstance();
+    }
 }
