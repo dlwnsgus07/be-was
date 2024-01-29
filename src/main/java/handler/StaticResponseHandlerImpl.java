@@ -57,8 +57,6 @@ public class StaticResponseHandlerImpl implements StaticResponseHandler {
     }
     private static void handleNotFound(HttpResponseDto httpResponseDto, NotFound e) {
         logger.error("파일을 찾을 수 없습니다." + e.getMessage());
-        httpResponseDto.setStatus(Status.REDIRECT);
-        httpResponseDto.addHeader("Location","/error/not_found.html");
-        httpResponseDto.setContentType(ContentType.HTML);
+        httpResponseDto.setStatus(Status.NOT_FOUND);
     }
 }

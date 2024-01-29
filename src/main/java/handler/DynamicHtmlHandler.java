@@ -6,6 +6,7 @@ import dto.HttpResponseDto;
 import exception.BadRequestException;
 import model.Post;
 import model.http.ContentType;
+import model.http.Status;
 import model.http.request.HttpRequest;
 import util.FileDetector;
 import util.HtmlParser;
@@ -41,7 +42,32 @@ public class DynamicHtmlHandler{
         if(pathUrl.endsWith(".html")){
             handleAllRequest(httpRequest, httpResponseDto, isLogin);
         }
+        if (httpResponseDto.getStatus() == Status.BAD_REQUEST | httpResponseDto.getStatus() == Status.INTERNAL_SERVER_ERROR) {
+            handleErrorRequest(httpResponseDto);
+        }
+        if (httpResponseDto.getStatus() == Status.NOT_FOUND) {
+            handleNotFoundRequest(httpResponseDto);
+        }
     }
+
+    private void handleNotFoundRequest( HttpResponseDto httpResponseDto) {
+        HtmlParser htmlParser;
+        htmlParser = new HtmlParser(new String(fileDetector.getFile("/error/not_found.html")));
+        httpResponseDto.setContentType(ContentType.HTML);
+        httpResponseDto.setContent(htmlParser.getHtml());
+        httpResponseDto.setContentLength(htmlParser.getHtml().getBytes().length);
+    }
+
+    private void handleErrorRequest(HttpResponseDto httpResponseDto) {
+        HtmlParser htmlParser;
+        htmlParser = new HtmlParser(new String(fileDetector.getFile("/error/not_allowed.html")));
+        String errorMessage = httpResponseDto.getContent();
+        htmlParser.appendContentById("message", errorMessage);
+        httpResponseDto.setContentType(ContentType.HTML);
+        httpResponseDto.setContent(htmlParser.getHtml());
+        httpResponseDto.setContentLength(htmlParser.getHtml().getBytes().length);
+    }
+
     public void handlePostShowRequest(HttpRequest httpRequest, HttpResponseDto httpResponseDto) {
         HtmlParser htmlParser;
         if (httpResponseDto.getContent() == null) {
