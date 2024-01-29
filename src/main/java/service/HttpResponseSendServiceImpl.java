@@ -1,6 +1,8 @@
 package service;
 
+import model.http.ContentType;
 import model.http.Status;
+import model.http.request.HttpRequest;
 import model.http.response.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +45,17 @@ public class HttpResponseSendServiceImpl implements HttpResponseSendService {
     }
 
     private void setBody(DataOutputStream dos, HttpResponse httpResponse) throws IOException {
-        dos.write(Base64.getDecoder().decode(httpResponse.getBody().getContent()));
+
+        if(httpResponse.getHeaders().getContentType() == ContentType.TTF ||
+                httpResponse.getHeaders().getContentType() == ContentType.ICO ||
+                httpResponse.getHeaders().getContentType() == ContentType.JPG ||
+                httpResponse.getHeaders().getContentType() == ContentType.WOFF ||
+        httpResponse.getHeaders().getContentType() == ContentType.WOFF2){
+            dos.write(Base64.getDecoder().decode(httpResponse.getBody().getContent()));
+        }
+        else{
+            dos.write(httpResponse.getBody().getContent().getBytes());
+        }
         dos.flush();
     }
 

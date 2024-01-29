@@ -30,6 +30,10 @@ public class ResponseHeaders {
         return "Date: " + date + "\r\n";
     }
 
+    public ContentType getContentType() {
+        return contentType;
+    }
+
     public String getContentTypeHeader() {
         return "Content-Type: " + contentType.getType() + ";" + charSet + " \r\n";
     }

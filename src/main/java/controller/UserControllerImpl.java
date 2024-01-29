@@ -61,7 +61,7 @@ public class UserControllerImpl{
         }
         htmlParser.appendContentByTag("tbody", stringBuilder.toString());
         httpResponseDto.setContentType(fileDetector.getContentType(httpRequest.getHeaders().getAccept(), httpRequest.getStartLine().getPathUrl()));
-        httpResponseDto.setContent(htmlParser.getHtml().getBytes());
+        httpResponseDto.setContent(htmlParser.getHtml());
     }
 
     @PostMapping(value = "/login")

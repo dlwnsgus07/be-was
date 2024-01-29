@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class HttpRequestFactoryImpl implements HttpRequestFactory {
     public static HttpRequestFactory getInstance() {
@@ -71,12 +72,14 @@ public class HttpRequestFactoryImpl implements HttpRequestFactory {
             String[] strings = httpRequest.get(i).split(": ");
             header.put(strings[0], strings[1]);
         }
-
         return header;
     }
 
     public StartLine parseStartLine(List<String> content) {
         String[] startLine = content.get(0).split(" ");
+        if(Objects.equals(startLine[1], "/")){
+            startLine[1] += "index.html";
+        }
         return new StartLine(HttpMethod.valueOf(startLine[0]), startLine[1], startLine[2]);
     }
 }

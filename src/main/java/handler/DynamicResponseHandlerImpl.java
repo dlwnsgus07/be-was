@@ -71,7 +71,8 @@ public class DynamicResponseHandlerImpl implements DynamicResponseHandler {
     private void handleInternalServerError(InternalServerException e, HttpResponseDto httpResponseDto) {
         httpResponseDto.setStatus(Status.INTERNAL_SERVER_ERROR);
         httpResponseDto.setContentType(ContentType.PLAIN);
-        httpResponseDto.setContent(e.getMessage().getBytes());
+        httpResponseDto.setContent(e.getMessage());
+        httpResponseDto.setContentLength(e.getMessage().getBytes().length);
         logger.error("Internal Server Error 발생", e.getMessage());
         e.getStackTrace();
     }
@@ -79,7 +80,8 @@ public class DynamicResponseHandlerImpl implements DynamicResponseHandler {
     private void handleBadRequestException(BadRequestException e, HttpResponseDto httpResponseDto) {
         httpResponseDto.setStatus(Status.BAD_REQUEST);
         httpResponseDto.setContentType(ContentType.PLAIN);
-        httpResponseDto.setContent(e.getMessage().getBytes());
+        httpResponseDto.setContent(e.getMessage());
+        httpResponseDto.setContentLength(e.getMessage().getBytes().length);
         logger.error("Bad_Request 발생", e.getMessage());
         e.getStackTrace();
     }

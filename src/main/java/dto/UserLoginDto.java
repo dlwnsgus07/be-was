@@ -3,6 +3,8 @@ package dto;
 import exception.BadRequestException;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class UserLoginDto {
@@ -35,6 +37,7 @@ public class UserLoginDto {
                     map.put(key, value);
                 }
             }
+            map.forEach((key, value) -> map.put(key, URLDecoder.decode(value, StandardCharsets.UTF_8)));
             return new UserLoginDto(map.get("userId"), map.get("password"));
         } catch (IndexOutOfBoundsException | IllegalArgumentException e){
             throw new BadRequestException("Please fill in all the necessary factors", e);

@@ -4,6 +4,7 @@ import exception.BadRequestException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -59,6 +60,7 @@ public class UserSignUpDto {
                     map.put(key, value);
                 }
             }
+            map.forEach((key, value) -> map.put(key, URLDecoder.decode(value, StandardCharsets.UTF_8)));
             return new UserSignUpDto(map.get("userId"), map.get("password"), map.get("name"), map.get("email"));
         } catch (IndexOutOfBoundsException | IllegalArgumentException | UnsupportedEncodingException e) {
             throw new BadRequestException("Please fill in all the necessary factors", e);

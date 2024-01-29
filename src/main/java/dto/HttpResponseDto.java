@@ -23,6 +23,7 @@ public class HttpResponseDto {
         this.charSet = UTF_8;
         this.status = Status.OK;
         this.optionHeader = new HashMap<>();
+        this.contentType = ContentType.PLAIN;
     }
 
     public String getVersion() {
@@ -64,9 +65,8 @@ public class HttpResponseDto {
         return optionHeader;
     }
 
-    public void setContent(byte[] content) {
-        this.content = Base64.getEncoder().encodeToString(content);
-        this.contentLength = content.length;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setContentLength(Integer contentLength) {
