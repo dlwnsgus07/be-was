@@ -5,14 +5,17 @@ import db.Database;
 import dto.HttpResponseDto;
 import exception.BadRequestException;
 import model.Post;
+import model.User;
 import model.http.ContentType;
 import model.http.Status;
 import model.http.request.HttpRequest;
+import session.Session;
 import util.FileDetector;
 import util.HtmlParser;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -142,7 +145,11 @@ public class DynamicHtmlHandler{
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<ul class=\"nav navbar-nav navbar-right\">");
         if (isLogin) {
+            String sessionId = httpRequest.getHeaders().getUserSessionId();
+            String loginUserId = Session.getLoginUserId(UUID.fromString(sessionId));
+            Optional<User> user = Database.findUserById(loginUserId);
             stringBuilder.append("<li class=\"active\"><a href=\"../index.html\">Posts</a></li>")
+                    .append("<li><a>").append(user.get().getName()).append("님 환영합니다.</a></li>")
                     .append("<li><a href=\"../user/logout\" role=\"button\">로그아웃</a></li>")
                     .append("<li><a href=\"#\" role=\"button\">개인정보수정</a></li>");
         } else {

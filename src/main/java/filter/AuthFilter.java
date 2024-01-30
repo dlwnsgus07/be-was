@@ -21,7 +21,7 @@ public class AuthFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(AuthFilter.class);
     private final StaticResponseHandler staticResponseHandler;
     private final DynamicResponseHandler dynamicResponseHandler;
-    private static List<String> loginRequiredPath = List.of("/user/list", "/post/write", "/post/show");
+    private static final List<String> loginRequiredPath = List.of("/user/list", "/post/write", "/post/show");
     private final Set<String> dynamicUrl;
     private final DynamicHtmlHandler dynamicHtmlHandler;
 
@@ -63,6 +63,7 @@ public class AuthFilter implements Filter {
             url = url.split("\\?")[0];
             logger.debug(url);
         }
+
         logger.debug(url);
         if (dynamicUrl.contains(url)) {
             logger.debug("동적인 response 전달");
