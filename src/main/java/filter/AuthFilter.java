@@ -53,7 +53,7 @@ public class AuthFilter implements Filter {
         if (httpRequest.getHeaders().hasCookie()) {
             isLogin = checkLogin(httpRequest);
         }
-        if (loginRequiredPath.stream().anyMatch(path -> httpRequest.getStartLine().getPathUrl().startsWith(path)) && !isLogin) {
+        if (loginRequiredPath.stream().anyMatch(path -> httpRequest.getStartLine().getPathUrl().contains(path)) && !isLogin) {
             httpResponseDto.setStatus(Status.REDIRECT);
             httpResponseDto.getOptionHeader().put("Location", "/user/login.html");
             return;
