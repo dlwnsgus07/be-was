@@ -49,6 +49,11 @@ public class PostController {
         redirectToPath(httpResponseDto, "/index.html");
     }
 
+    @GetMapping("/show")
+    public void handlePostShowRequest(HttpRequest httpRequest, HttpResponseDto httpResponseDto) {
+        return;
+    }
+
     private void redirectToPath(HttpResponseDto httpResponseDto, String path) {
         httpResponseDto.setStatus(Status.REDIRECT);
         httpResponseDto.addHeader("Location", path);

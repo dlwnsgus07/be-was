@@ -48,6 +48,8 @@ public class AuthFilter implements Filter {
     @Override
     public void doFilter(HttpRequest httpRequest, HttpResponseDto httpResponseDto) {
         boolean isLogin = false;
+        String url = httpRequest.getStartLine().getPathUrl();
+
         if (httpRequest.getHeaders().hasCookie()) {
             isLogin = checkLogin(httpRequest);
         }
@@ -57,7 +59,12 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        if (dynamicUrl.contains(httpRequest.getStartLine().getPathUrl())) {
+        if(url.contains("?")){
+            url = url.split("\\?")[0];
+            logger.debug(url);
+        }
+        logger.debug(url);
+        if (dynamicUrl.contains(url)) {
             logger.debug("동적인 response 전달");
             dynamicResponseHandler.handle(httpRequest, httpResponseDto);
         } else {

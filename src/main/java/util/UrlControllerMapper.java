@@ -66,6 +66,9 @@ public class UrlControllerMapper {
     }
 
     public Method getMethod(String pathUrl) {
+        if (pathUrl.contains("\\?")) {
+            pathUrl = pathUrl.split("\\?")[0];
+        }
         return urlMapper.get(pathUrl);
     }
 
