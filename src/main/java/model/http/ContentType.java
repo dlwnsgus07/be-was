@@ -1,6 +1,10 @@
 package model.http;
 
 import exception.BadRequestException;
+import org.checkerframework.checker.units.qual.C;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum ContentType {
     // TEXT 타입
@@ -24,6 +28,15 @@ public enum ContentType {
 
     public String getType() {
         return type;
+    }
+
+    static public List<String> getStaticType(){
+        return List.of(
+                ContentType.PLAIN.getExtension(),
+                ContentType.HTML.getExtension(),
+                ContentType.JAVASCRIPT.getExtension(),
+                ContentType.CSS.getExtension()
+        );
     }
 
     public String getExtension() {

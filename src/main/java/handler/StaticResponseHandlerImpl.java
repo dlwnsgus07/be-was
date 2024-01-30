@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import util.FileDetector;
 
 import java.util.Base64;
+import java.util.List;
 
 import static config.AppConfig.fileDetector;
 
@@ -39,13 +40,11 @@ public class StaticResponseHandlerImpl implements StaticResponseHandler {
         }
     }
     private void handleStaticFileRequest(HttpRequest httpRequest, HttpResponseDto httpResponseDto) {
-        if(httpRequest.getStartLine().getPathUrl().contains("post/show")){
-            return;
-        }
         byte[] file = fileDetector.getFile(httpRequest.getStartLine().getPathUrl());
-        if(httpRequest.getStartLine().getPathUrl().contains("html")
-                || httpRequest.getStartLine().getPathUrl().contains("css")
-                || httpRequest.getStartLine().getPathUrl().contains("js")){
+        List<String> staticType = ContentType.getStaticType();
+        String pathUrl = httpRequest.getStartLine().getPathUrl();
+
+        if(staticType.stream().anyMatch(pathUrl::contains)){
             httpResponseDto.setContent(new String(file));
             httpResponseDto.setContentLength(file.length);
         }else{
