@@ -65,6 +65,7 @@ public class DynamicHtmlHandler{
         HtmlParser htmlParser;
         htmlParser = new HtmlParser(new String(fileDetector.getFile("/error/not_allowed.html")));
         String errorMessage = httpResponseDto.getContent();
+        httpResponseDto.setStatus(Status.NOT_ALLOWED);
         htmlParser.appendContentById("message", errorMessage);
         httpResponseDto.setContentType(ContentType.HTML);
         httpResponseDto.setContent(htmlParser.getHtml());
